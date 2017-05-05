@@ -1,14 +1,23 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { applyMiddleware, createStore } from 'redux';
 
-class App extends Component {
-  render() {
-    return (
-      <h1>Hello, World!</h1>
-    );
-  }
-}
+import App from './components/App';
+
+const initialState = {
+  appName: 'Medium Lite',
+  articles: null
+};
+
+const reducer = (state = initialState, action) => {
+  return state;
+};
+
+const store = createStore(reducer);
 
 ReactDOM.render((
-  <App />
+  <Provider store={store}>
+    <App />
+  </Provider>
 ), document.getElementById('root'));
