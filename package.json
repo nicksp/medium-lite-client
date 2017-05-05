@@ -1,0 +1,32 @@
+{
+  "name": "medium-lite-client",
+  "version": "1.0.0",
+  "description": "Medium Lite React/Redux Client App",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nicksp/medium-lite-client"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "react-scripts": "^0.9.5"
+  },
+  "dependencies": {
+    "history": "^4.3.0",
+    "marked": "^0.3.6",
+    "prop-types": "^15.5.8",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-redux": "^5.0.4",
+    "react-router": "^2.8.1",
+    "redux": "^3.6.0",
+    "superagent": "^3.5.2",
+    "superagent-promise": "^1.1.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
