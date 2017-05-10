@@ -1,6 +1,6 @@
 import superagent from 'superagent';
 
-const API_ROOT = 'https://api/server/path';
+const API_ROOT = 'https://conduit.productionready.io/api';
 
 const getResponseBody = response => response.body;
 
