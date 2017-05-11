@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import Header from './Header';
-import Home from './Home';
 
 class App extends Component {
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
+
   render() {
     return (
       <div>
         <Header appName={this.props.appName} />
-        <Home />
+        {this.props.children}
       </div>
     );
   }
