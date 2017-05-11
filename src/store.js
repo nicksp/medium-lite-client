@@ -14,8 +14,9 @@ const reducer = (state = initialState, action) => {
         ...state,
         articles: action.payload.articles
       };
+    default:
+      return state;
   }
-  return state;
 };
 
 const middleware = applyMiddleware(promiseMiddleware);
