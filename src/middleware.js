@@ -4,6 +4,7 @@ function _isPromise(input) {
 
 const promiseMiddleware = store => next => action => {
   if (_isPromise(action.payload)) {
+    store.dispatch({ type: 'ASYNC_START', subtype: action.type });
     action.payload.then(
       response => {
         action.payload = response;

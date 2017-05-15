@@ -10,6 +10,8 @@ export default class ListErrors extends Component {
           {Object.keys(errors).map(key => <li key={key}>{key} {errors[key]}</li>)}
         </ul>
       );
+    } else {
+      return null;
     }
   }
 }
