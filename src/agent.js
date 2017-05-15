@@ -22,7 +22,6 @@ let token = null;
 
 export default {
   Articles,
-  Auth
   Auth,
   setToken: token => { token }
 };
