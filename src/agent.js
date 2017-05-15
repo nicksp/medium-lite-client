@@ -14,10 +14,15 @@ const Articles = {
 };
 
 const Auth = {
-  login: (email, password) => requests.post('/users/login', { user: { email, password } })
+  login: (email, password) => requests.post('/users/login', { user: { email, password } }),
+  current: () => requests.get('/user')
 };
+
+let token = null;
 
 export default {
   Articles,
   Auth
+  Auth,
+  setToken: token => { token }
 };
