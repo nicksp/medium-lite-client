@@ -54,7 +54,8 @@ class Login extends Component {
 
                   <button
                     className="btn btn-lg btn-primary pull-xs-right"
-                    type="submit" disabled={isInProgress}
+                    type="submit"
+                    disabled={isInProgress}
                   >
                     Sign in
                   </button>
