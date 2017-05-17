@@ -14,8 +14,9 @@ const Articles = {
 };
 
 const Auth = {
+  current: () => requests.get('/user'),
   login: (email, password) => requests.post('/users/login', { user: { email, password } }),
-  current: () => requests.get('/user')
+  register: (username, email, password) => requests.post('/users', { user: { username, email, password } })
 };
 
 let token = null;
@@ -23,5 +24,5 @@ let token = null;
 export default {
   Articles,
   Auth,
-  setToken: token => { token }
+  setToken: _token => { token = _token; }
 };
