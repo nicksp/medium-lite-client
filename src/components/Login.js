@@ -14,6 +14,10 @@ class Login extends Component {
     this.props.onSubmit(email, password);
   }
 
+  componentWillUnmount() {
+    this.props.onUnload();
+  }
+
   render() {
     const { email, password, errors, isInProgress } = this.props;
 
@@ -74,7 +78,8 @@ const mapStateToProps = state => ({ ...state.auth });
 
 const mapDispatchToProps = dispatch => ({
   onChangeField: (key, value) => dispatch({ type: 'UPDATE_FIELD_AUTH', key, value }),
-  onSubmit: (email, password) => dispatch({ type: 'LOGIN', payload: agent.Auth.login(email, password) })
+  onSubmit: (email, password) => dispatch({ type: 'LOGIN', payload: agent.Auth.login(email, password) }),
+  onUnload: () => dispatch({ type: 'LOGIN_PAGE_UNLOADED' })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

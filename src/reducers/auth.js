@@ -7,6 +7,9 @@ export default (state = {}, action) => {
         isInProgress: false,
         errors: action.error ? action.payload.errors : null
       };
+    case 'LOGIN_PAGE_UNLOADED':
+    case 'REGISTER_PAGE_UNLOADED':
+      return {};
     case 'ASYNC_START':
       if (action.subtype === 'LOGIN' || action.subtype === 'REGISTER') {
         return {
