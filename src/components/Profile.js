@@ -6,8 +6,8 @@ import agent from '../agent';
 
 import ArticleList from './ArticleList';
 
-const EditProfileSettings = props => {
-  if (props.isUser) {
+function EditProfileSettings({ isUser }) {
+  if (isUser) {
     return (
       <Link
         to="settings"
@@ -20,24 +20,25 @@ const EditProfileSettings = props => {
   return null;
 };
 
-const FollowUserButton = props => {
-  if (props.isUser) {
+function FollowUserButton({ isUser, user, unfollow, follow }) {
+  if (isUser) {
     return null;
   }
 
   let classes = 'btn btn-sm action-btn';
-  if (props.user.following) {
+
+  if (user.following) {
     classes += ' btn-secondary';
   } else {
     classes += ' btn-outline-secondary';
   }
 
-  const handleClick = ev => {
-    ev.preventDefault();
-    if (props.user.following) {
-      props.unfollow(props.user.username)
+  const handleClick = event => {
+    event.preventDefault();
+    if (user.following) {
+      unfollow(user.username)
     } else {
-      props.follow(props.user.username)
+      follow(user.username)
     }
   };
 
@@ -46,9 +47,9 @@ const FollowUserButton = props => {
       className={classes}
       onClick={handleClick}
     >
-      <i className="ion-plus-round"></i>
+      <i className="ion-plus-round" />
       &nbsp;
-      {props.user.following ? 'Unfollow' : 'Follow'} {props.user.username}
+      {user.following ? 'Unfollow' : 'Follow'} {user.username}
     </button>
   );
 };
@@ -57,9 +58,11 @@ class Profile extends Component {
   constructor(props) {
     super(props);
 
+    const { username } = props.params;
+
     props.onLoad(Promise.all([
-      agent.Profile.get(props.params.username),
-      agent.Articles.byAuthor(props.params.username)
+      agent.Profile.get(username),
+      agent.Articles.byAuthor(username)
     ]));
   }
 
@@ -103,7 +106,7 @@ class Profile extends Component {
           <div className="container">
             <div className="row">
               <div className="col-xs-12 col-md-10 offset-md-1">
-                <img src={profile.image} className="user-img" />
+                <img src={profile.image} alt={profile.username} className="user-img" />
                 <h4>{profile.username}</h4>
                 <p>{profile.bio}</p>
 
@@ -125,7 +128,6 @@ class Profile extends Component {
               <div className="articles-toggle">
                 {this.renderTabs()}
               </div>
-
               <ArticleList articles={articles} />
             </div>
           </div>
@@ -155,5 +157,5 @@ const mapDispatchToProps = dispatch => ({
   onUnload: () => dispatch({ type: 'PROFILE_PAGE_UNLOADED' })
 });
 
-export { Profile as Profile, mapStateToProps as mapStateToProps };
+export { Profile, mapStateToProps };
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

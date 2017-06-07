@@ -7,10 +7,14 @@ import agent from '../agent';
 import { Profile, mapStateToProps } from './Profile';
 
 class ProfileFavorites extends Profile {
-  componentWillMount() {
-    this.props.onLoad(Promise.all([
-      agent.Profile.get(this.props.params.username),
-      agent.Articles.favoritedBy(this.props.params.username)
+  constructor(props) {
+    super(props);
+
+    const { username } = props.params;
+
+    props.onLoad(Promise.all([
+      agent.Profile.get(username),
+      agent.Articles.favoritedBy(username)
     ]));
   }
 
@@ -19,6 +23,8 @@ class ProfileFavorites extends Profile {
   }
 
   renderTabs() {
+    const { profile } = this.props;
+
     return (
       <ul className="nav nav-pills outline-active">
         <li className="nav-item">
@@ -42,14 +48,12 @@ const mapDispatchToProps = dispatch => ({
     type: 'FOLLOW_USER',
     payload: agent.Profile.follow(username)
   }),
-  onLoad: (payload) =>
-    dispatch({ type: 'PROFILE_FAVORITES_PAGE_LOADED', payload }),
+  onLoad: payload => dispatch({ type: 'PROFILE_FAVORITES_PAGE_LOADED', payload }),
   onUnfollow: username => dispatch({
     type: 'UNFOLLOW_USER',
     payload: agent.Profile.unfollow(username)
   }),
-  onUnload: () =>
-    dispatch({ type: 'PROFILE_FAVORITES_PAGE_UNLOADED' })
+  onUnload: () => dispatch({ type: 'PROFILE_FAVORITES_PAGE_UNLOADED' })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileFavorites);
