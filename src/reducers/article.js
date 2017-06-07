@@ -1,5 +1,12 @@
 export default (state = {}, action) => {
   switch (action.type) {
+    case 'ADD_COMMENT':
+      return {
+        ...state,
+        commentErrors: action.error ? action.payload.errors : null,
+        comments: action.error ? null : (state.comments || []).concat([action.payload.comment])
+      };
+      break;
     case 'ARTICLE_PAGE_LOADED':
       return {
         ...state,
