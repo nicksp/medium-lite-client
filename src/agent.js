@@ -16,7 +16,7 @@ const Articles = {
 };
 
 const Comments = {
-  getForArticle = slug => requests.get(`/articles/${slug}/comments`)
+  getForArticle: slug => requests.get(`/articles/${slug}/comments`)
 };
 
 const Auth = {
