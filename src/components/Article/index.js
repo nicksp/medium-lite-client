@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import marked from 'marked';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
 import agent from '../../agent';
+
 import ArticleMeta from './ArticleMeta';
 import CommentContainer from './CommentContainer';
 
