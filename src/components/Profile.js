@@ -73,19 +73,13 @@ class Profile extends Component {
     return (
       <ul className="nav nav-pills outline-active">
         <li className="nav-item">
-          <Link
-            className="nav-link active"
-            to={`@${profile.username}`}
-          >
+          <Link className="nav-link active" to={`/@${profile.username}`}>
             My Articles
           </Link>
         </li>
 
         <li className="nav-item">
-          <Link
-            className="nav-link"
-            to={`@${profile.username}/favorites`}
-          >
+          <Link className="nav-link" to={`/@${profile.username}/favorites`}>
             Favorited Articles
           </Link>
         </li>
