@@ -19,7 +19,8 @@ const Articles = {
 
 const Comments = {
   getForArticle: slug => requests.get(`/articles/${slug}/comments`),
-  create: (slug, comment) => requests.post(`/articles/${slug}/comments`, { comment })
+  create: (slug, comment) => requests.post(`/articles/${slug}/comments`, { comment }),
+  del: (slug, commentId) => requests.del(`/articles/${slug}/comments/${commentId}`)
 };
 
 const Auth = {
