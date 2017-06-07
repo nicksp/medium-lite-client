@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import ArticleList from '../ArticleList';
 
-function MainView(props) {
+function MainView({ articles }) {
   return (
     <div className="col-md-9">
       <div className="feed-toggle">
@@ -14,13 +14,13 @@ function MainView(props) {
         </ul>
       </div>
 
-      <ArticleList articles={props.articles} />
+      <ArticleList articles={articles} />
     </div>
   );
 }
 
 const mapStateToProps = state => ({
-  articles: state.home.articles
+  ...state.articleList
 });
 
 export default connect(mapStateToProps)(MainView);
