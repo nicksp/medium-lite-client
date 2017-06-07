@@ -8,12 +8,12 @@ import ArticleMeta from './ArticleMeta';
 import CommentContainer from './CommentContainer';
 
 class Article extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
-    const articleId = this.props.params.id;
+    const articleId = props.params.id;
 
-    this.props.onLoad(Promise.all([
+    props.onLoad(Promise.all([
       agent.Articles.get(articleId),
       agent.Comments.getForArticle(articleId)
     ]));
