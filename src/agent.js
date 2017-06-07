@@ -5,13 +5,22 @@ const API_ROOT = 'https://api/server/path';
 const getResponseBody = response => response.body;
 
 const requests = {
+  del: url => superagent.del(`${API_ROOT}${url}`).then(getResponseBody),
   get: url => superagent.get(`${API_ROOT}${url}`).then(getResponseBody),
   post: (url, body) => superagent.post(`${API_ROOT}${url}`, body).then(getResponseBody),
   put: (url, body) => superagent.put(`${API_ROOT}${url}`, body).then(getResponseBody)
 };
 
 const Articles = {
-  all: page => requests.get('/articles?limit=10')
+  all: page => requests.get('/articles?limit=10'),
+  del: slug => requests.del(`/articles/${slug}`),
+  get: slug => requests.get(`/articles/${slug}`)
+};
+
+const Comments = {
+  getForArticle: slug => requests.get(`/articles/${slug}/comments`),
+  create: (slug, comment) => requests.post(`/articles/${slug}/comments`, { comment }),
+  del: (slug, commentId) => requests.del(`/articles/${slug}/comments/${commentId}`)
 };
 
 const Auth = {
@@ -26,5 +35,6 @@ let token = null;
 export default {
   Articles,
   Auth,
+  Comments,
   setToken: _token => { token = _token; }
 };
