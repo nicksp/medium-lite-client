@@ -7,8 +7,11 @@ import MainView from './MainView';
 import Banner from './Banner';
 
 class Home extends Component {
-  componentDidMount() {
-    this.props.onLoad(agent.Articles.all());
+  constructor(props) {
+    super(props);
+    const tab = props.token ? 'feed' : 'all';
+    const articlesPromise = props.token ? agent.Articles.feed() : agent.Articles.all();
+    props.onLoad(tab, articlesPromise);
   }
 
   render() {
@@ -32,14 +35,17 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => ({
-  appName: state.common.appName
+  appName: state.common.appName,
+  token: state.common.token
 });
 
 const mapDispatchToProps = dispatch => ({
-  onLoad: (payload) => dispatch({
+  onLoad: (tab, payload) => dispatch({
     type: 'HOME_PAGE_LOADED',
+    tab,
     payload
-  })
+  }),
+  onUnload: () => dispatch({ type: 'HOME_PAGE_UNLOADED' })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
