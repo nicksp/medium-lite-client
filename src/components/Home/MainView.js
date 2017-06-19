@@ -5,6 +5,20 @@ import ArticleList from '../ArticleList';
 
 import agent from '../../agent';
 
+function TagFilterTab(props) {
+  if (!props.tag) {
+    return null;
+  }
+
+  return (
+    <li className="nav-item">
+      <a href="" className="nav-link active">
+        <i className="ion-pound" /> {props.tag}
+      </a>
+    </li>
+  );
+}
+
 function YourFeedTab(props) {
   if (props.token) {
     const clickHandler = event => {
@@ -44,7 +58,7 @@ function GlobalFeedTab(props) {
   );
 }
 
-function MainView({ articles, tab, token, onTabClick }) {
+function MainView({ articles, tab, tag, token, onTabClick }) {
   return (
     <div className="col-md-9">
       <div className="feed-toggle">
@@ -55,6 +69,7 @@ function MainView({ articles, tab, token, onTabClick }) {
             onTabClick={onTabClick}
           />
           <GlobalFeedTab tab={tab} onTabClick={onTabClick} />
+          <TagFilterTab tag={tag} />
         </ul>
       </div>
 
