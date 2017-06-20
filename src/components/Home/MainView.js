@@ -58,7 +58,9 @@ function GlobalFeedTab(props) {
   );
 }
 
-function MainView({ articles, tab, tag, token, onTabClick }) {
+function MainView({ articles, articlesCount, currentPage, onSetPage, tab, tag, token, onTabClick }) {
+const handleSetPage = page => onSetPage(tab, page);
+
   return (
     <div className="col-md-9">
       <div className="feed-toggle">
@@ -73,7 +75,12 @@ function MainView({ articles, tab, tag, token, onTabClick }) {
         </ul>
       </div>
 
-      <ArticleList articles={articles} />
+      <ArticleList
+        articles={articles}
+        articlesCount={articlesCount}
+        currentPage={currentPage}
+        onSetPage={handleSetPage}
+      />
     </div>
   );
 }
@@ -84,7 +91,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onTabClick: (tab, payload) => dispatch({ type: 'CHANGE_TAB', tab, payload })
+  onTabClick: (tab, payload) => dispatch({ type: 'CHANGE_TAB', tab, payload }),
+  onSetPage: (tab, page) => dispatch({
+    type: 'SET_PAGE',
+    page,
+    payload: tab === 'feed' ? agent.Articles.feed(page) : agent.Articles.all(page)
+  })
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainView);
