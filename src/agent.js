@@ -6,6 +6,7 @@ const getResponseBody = response => response.body;
 
 const limit = (count, page) => `limit=${count}&offset=${page ? page * count : 0}` ;
 const encode = encodeURIComponent;
+const omitSlug = article => Object.assign({}, article, { slug: undefined });
 
 const requests = {
   del: url => superagent.del(`${API_ROOT}${url}`).then(getResponseBody),
@@ -21,7 +22,9 @@ const Articles = {
   del: slug => requests.del(`/articles/${slug}`),
   favoritedBy: (author, page) => requests.get(`/articles?favorited=${encode(author)}&${limit(10, page)}`),
   feed: page => requests.get(`/articles/feed?l${limit(10, page)}`),
-  get: slug => requests.get(`/articles/${slug}`)
+  get: slug => requests.get(`/articles/${slug}`),
+  create: article => requests.post('/articles', { article }),
+  update: article => requests.put(`/articles/${article.slug}`, { article: omitSlug(article) })
 };
 
 const Tags = {
