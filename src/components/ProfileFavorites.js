@@ -22,6 +22,11 @@ class ProfileFavorites extends Profile {
     this.props.onUnload();
   }
 
+  onSetPage(page) {
+    const promise = agent.articles.favoritedBy(this.props.profile.username, page);
+    this.props.onSetPage(page, promise);
+  }
+
   renderTabs() {
     const { profile } = this.props;
 
@@ -53,7 +58,8 @@ const mapDispatchToProps = dispatch => ({
     type: 'UNFOLLOW_USER',
     payload: agent.Profile.unfollow(username)
   }),
-  onUnload: () => dispatch({ type: 'PROFILE_FAVORITES_PAGE_UNLOADED' })
+  onUnload: () => dispatch({ type: 'PROFILE_FAVORITES_PAGE_UNLOADED' }),
+  onSetPage: (page, payload) => dispatch({ type: 'SET_PAGE', page, payload })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileFavorites);

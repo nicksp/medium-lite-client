@@ -1,6 +1,7 @@
 import React from 'react';
 
 import ArticlePreview from './ArticlePreview';
+import ListPagination from './ListPagination';
 
 function ArticleList(props) {
   if (!props.articles) {
@@ -14,6 +15,11 @@ function ArticleList(props) {
   return (
     <div>
       {props.articles.map(article => <ArticlePreview key={article.slug} article={article} />)}
+      <ListPagination
+        articlesCount={props.articlesCount}
+        currentPage={props.currentPage}
+        onSetPage={props.onSetPage}
+      />
     </div>
   );
 }

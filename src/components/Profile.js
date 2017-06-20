@@ -70,6 +70,11 @@ class Profile extends Component {
     this.props.onUnload();
   }
 
+  onSetPage(page) {
+    const promise = agent.articles.byAuthor(this.props.profile.username, page);
+    this.props.onSetPage(page, promise);
+  }
+
   renderTabs() {
     const { profile } = this.props;
 
@@ -91,7 +96,15 @@ class Profile extends Component {
   }
 
   render() {
-    const { articles, profile, currentUser, onFollow, onUnfollow } = this.props;
+    const {
+      articles,
+      articlesCount,
+      currentPage,
+      profile,
+      currentUser,
+      onFollow,
+      onUnfollow
+    } = this.props;
 
     if (!profile) {
       return null;
@@ -128,7 +141,12 @@ class Profile extends Component {
               <div className="articles-toggle">
                 {this.renderTabs()}
               </div>
-              <ArticleList articles={articles} />
+              <ArticleList
+                articles={articles}
+                articlesCount={articlesCount}
+                currentPage={currentPage}
+                onSetPage={this.onSetPage}
+              />
             </div>
           </div>
         </div>
@@ -154,7 +172,8 @@ const mapDispatchToProps = dispatch => ({
     type: 'UNFOLLOW_USER',
     payload: agent.Profile.unfollow(username)
   }),
-  onUnload: () => dispatch({ type: 'PROFILE_PAGE_UNLOADED' })
+  onUnload: () => dispatch({ type: 'PROFILE_PAGE_UNLOADED' }),
+  onSetPage: (page, payload) => dispatch({ type: 'SET_PAGE', page, payload })
 });
 
 export { Profile, mapStateToProps };
