@@ -1,12 +1,20 @@
+import {
+  SETTINGS_SAVED,
+  SETTINGS_PAGE_UNLOADED,
+  ASYNC_START
+} from '../constants/actionTypes';
+
 export default (state = {}, action) => {
   switch (action.type) {
-    case 'SETTINGS_SAVED':
+    case SETTINGS_SAVED:
       return {
         ...state,
         isInProgress: false,
         errors: action.error ? action.payload.errors : null
       };
-    case 'ASYNC_START':
+    case SETTINGS_PAGE_UNLOADED:
+      return {};
+    case ASYNC_START:
       return {
         ...state,
         isInProgress: true
@@ -14,4 +22,4 @@ export default (state = {}, action) => {
     default:
       return state;
   }
-}
+};
