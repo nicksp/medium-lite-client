@@ -7,6 +7,12 @@ import agent from '../../agent';
 import ArticleMeta from './ArticleMeta';
 import CommentContainer from './CommentContainer';
 
+import {
+  ARTICLE_PAGE_LOADED,
+  ARTICLE_PAGE_UNLOADED
+} from '../../constants/actionTypes';
+
+
 class Article extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +36,7 @@ class Article extends Component {
       return null;
     }
 
-    const markup = { __html: marked(article.body) };
+    const markup = { __html: marked(article.body, { sanitize: true }) };
     const canModify = currentUser && currentUser.username === article.author.username;
 
     return (
@@ -83,8 +89,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onLoad: payload => dispatch({ type: 'ARTICLE_PAGE_LOADED', payload }),
-  onUnload: () => dispatch({ type: 'ARTICLE_PAGE_UNLOADED' })
+  onLoad: payload => dispatch({ type: ARTICLE_PAGE_LOADED, payload }),
+  onUnload: () => dispatch({ type: ARTICLE_PAGE_UNLOADED })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Article);

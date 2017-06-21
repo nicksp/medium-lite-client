@@ -4,8 +4,11 @@ import { connect } from 'react-redux';
 
 import agent from '../../agent';
 
+import { DELETE_ARTICLE } from '../../constants/actionTypes';
+
 function ArticleActions({ article, canModify, handleDelete }) {
-  const del = () => handleDelete(agent.Articles.del(article.slug));
+  const del = () => handleDelete(agent.Articles.delete(article.slug));
+
   if (canModify) {
     return (
       <span>
@@ -26,7 +29,7 @@ function ArticleActions({ article, canModify, handleDelete }) {
 }
 
 const mapDispatchToProps = dispatch => ({
-  handleDelete: payload => dispatch({ type: 'DELETE_ARTICLE', payload })
+  handleDelete: payload => dispatch({ type: DELETE_ARTICLE, payload })
 });
 
 export default connect(null, mapDispatchToProps)(ArticleActions);

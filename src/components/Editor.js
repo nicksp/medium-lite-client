@@ -5,6 +5,15 @@ import ListErrors from './ListErrors';
 
 import agent from '../agent';
 
+import {
+  ADD_TAG,
+  EDITOR_PAGE_LOADED,
+  REMOVE_TAG,
+  ARTICLE_SUBMITTED,
+  EDITOR_PAGE_UNLOADED,
+  EDITOR_UPDATE_FIELD
+} from '../constants/actionTypes';
+
 class Editor extends Component {
   constructor(props) {
     super(props);
@@ -136,7 +145,7 @@ class Editor extends Component {
                   <button
                     className="btn btn-lg pull-xs-right btn-primary"
                     type="button"
-                    disabled={this.props.inProgress}
+                    disabled={this.props.isInProgress}
                     onClick={this.submitForm}
                   >
                     Publish Article
@@ -156,12 +165,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onAddTag: () => dispatch({ type: 'ADD_TAG' }),
-  onRemoveTag: tag => dispatch({ type: 'REMOVE_TAG', tag }),
-  onLoad: payload => dispatch({ type: 'EDITOR_PAGE_LOADED', payload }),
-  onUnload: () => dispatch({ type: 'EDITOR_PAGE_UNLOADED' }),
-  onSubmit: payload => dispatch({ type: 'ARTICLE_SUBMITTED', payload }),
-  onUpdateField: (key, value) => dispatch({ type: 'EDITOR_UPDATE_FIELD', key, value })
+  onAddTag: () => dispatch({ type: ADD_TAG }),
+  onRemoveTag: tag => dispatch({ type: REMOVE_TAG, tag }),
+  onLoad: payload => dispatch({ type: EDITOR_PAGE_LOADED, payload }),
+  onUnload: () => dispatch({ type: EDITOR_PAGE_UNLOADED }),
+  onSubmit: payload => dispatch({ type: ARTICLE_SUBMITTED, payload }),
+  onUpdateField: (key, value) => dispatch({ type: EDITOR_UPDATE_FIELD, key, value })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Editor);

@@ -14,14 +14,14 @@ function Comment(props) {
       </div>
       <div className="card-footer">
         <Link
-          to={`@${comment.author.username}`}
+          to={`/@${comment.author.username}`}
           className="comment-author"
         >
           <img src={comment.author.image} alt={comment.author.username} className="comment-author-img" />
         </Link>
         &nbsp;
         <Link
-          to={`@${comment.author.username}`}
+          to={`/@${comment.author.username}`}
           className="comment-author"
         >
           {comment.author.username}

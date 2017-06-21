@@ -6,19 +6,23 @@ import Header from './Header';
 
 import agent from '../agent';
 
+import { APP_LOAD, REDIRECT } from '../constants/actionTypes';
+
 class App extends Component {
   static contextTypes = {
     router: PropTypes.object.isRequired
   }
 
-  componentDidMount() {
+  constructor(props) {
+    super(props);
+
     const token = window.localStorage.getItem('jwt');
 
     if (token) {
       agent.setToken(token);
     }
 
-    this.props.onLoad(token ? agent.Auth.current() : null, token);
+    props.onLoad(token ? agent.Auth.current() : null, token);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -32,7 +36,10 @@ class App extends Component {
     if (this.props.appLoaded) {
       return (
         <div>
-          <Header appName={this.props.appName} currentUser={this.props.currentUser} />
+          <Header
+            appName={this.props.appName}
+            currentUser={this.props.currentUser}
+          />
           {this.props.children}
         </div>
       );
@@ -40,7 +47,10 @@ class App extends Component {
 
     return (
       <div>
-        <Header appName={this.props.appName} currentUser={this.props.currentUser} />
+        <Header
+          appName={this.props.appName}
+          currentUser={this.props.currentUser}
+        />
       </div>
     );
   }
@@ -54,8 +64,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onRedirect: () => dispatch({ type: 'REDIRECT' }),
-  onLoad: (payload, token) => dispatch({ type: 'APP_LOAD', payload, token })
+  onRedirect: () => dispatch({ type: REDIRECT }),
+  onLoad: (payload, token) => dispatch({ type: APP_LOAD, payload, token })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

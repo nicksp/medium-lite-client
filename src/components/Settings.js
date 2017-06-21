@@ -5,6 +5,11 @@ import ListErrors from './ListErrors';
 import SettingsForm from './SettingsForm';
 
 import agent from '../agent';
+import {
+  SETTINGS_SAVED,
+  SETTINGS_PAGE_UNLOADED,
+  LOGOUT
+} from '../constants/actionTypes';
 
 class Settings extends Component {
   render() {
@@ -46,11 +51,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onLogout: () => dispatch({ type: 'LOGOUT' }),
+  onLogout: () => dispatch({ type: LOGOUT }),
   onSubmitForm: user => {
     const payload = agent.Auth.save(user);
-    dispatch({ type: 'SETTINGS_SAVED', payload });
-  }
+    dispatch({ type: SETTINGS_SAVED, payload });
+  },
+  onUnload: () => dispatch({ type: SETTINGS_PAGE_UNLOADED })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings)

@@ -4,6 +4,10 @@ import { connect } from 'react-redux';
 
 import agent from '../agent';
 
+import {
+  PROFILE_PAGE_LOADED,
+  PROFILE_PAGE_UNLOADED
+} from '../constants/actionTypes';
 import { Profile, mapStateToProps } from './Profile';
 
 class ProfileFavorites extends Profile {
@@ -12,7 +16,7 @@ class ProfileFavorites extends Profile {
 
     const { username } = props.params;
 
-    props.onLoad(Promise.all([
+    props.onLoad(page => agent.Articles.favoritedBy(username, page), Promise.all([
       agent.Profile.get(username),
       agent.Articles.favoritedBy(username)
     ]));
@@ -20,11 +24,6 @@ class ProfileFavorites extends Profile {
 
   componentWillUnmount() {
     this.props.onUnload();
-  }
-
-  onSetPage(page) {
-    const promise = agent.articles.favoritedBy(this.props.profile.username, page);
-    this.props.onSetPage(page, promise);
   }
 
   renderTabs() {
@@ -49,17 +48,8 @@ class ProfileFavorites extends Profile {
 }
 
 const mapDispatchToProps = dispatch => ({
-  onFollow: username => dispatch({
-    type: 'FOLLOW_USER',
-    payload: agent.Profile.follow(username)
-  }),
-  onLoad: payload => dispatch({ type: 'PROFILE_FAVORITES_PAGE_LOADED', payload }),
-  onUnfollow: username => dispatch({
-    type: 'UNFOLLOW_USER',
-    payload: agent.Profile.unfollow(username)
-  }),
-  onUnload: () => dispatch({ type: 'PROFILE_FAVORITES_PAGE_UNLOADED' }),
-  onSetPage: (page, payload) => dispatch({ type: 'SET_PAGE', page, payload })
+  onLoad: payload => dispatch({ type: PROFILE_PAGE_LOADED, payload }),
+  onUnload: () => dispatch({ type: PROFILE_PAGE_UNLOADED })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileFavorites);

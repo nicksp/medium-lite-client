@@ -10,7 +10,7 @@ function Tags({ tags, onTagSelect }) {
           tags.map(tag => {
             const handleClick = event => {
               event.preventDefault();
-              onTagSelect(tag, agent.Articles.byTag(tag));
+              onTagSelect(tag, page => agent.Articles.byTag(tag, page), agent.Articles.byTag(tag));
             };
 
             return (

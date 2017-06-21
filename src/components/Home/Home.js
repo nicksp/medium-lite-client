@@ -7,12 +7,23 @@ import MainView from './MainView';
 import Banner from './Banner';
 import Tags from './Tags';
 
+import {
+  HOME_PAGE_LOADED,
+  HOME_PAGE_UNLOADED,
+  APPLY_TAG_FILTER
+} from '../../constants/actionTypes';
+
 class Home extends Component {
   constructor(props) {
     super(props);
+
     const tab = props.token ? 'feed' : 'all';
-    const articlesPromise = props.token ? agent.Articles.feed() : agent.Articles.all();
-    props.onLoad(tab, Promise.all([agent.Tags.getAll(), articlesPromise]));
+    const articlesPromise = props.token ? agent.Articles.feed : agent.Articles.all;
+    props.onLoad(tab, articlesPromise, Promise.all([agent.Tags.getAll(), articlesPromise()]));
+  }
+
+  componentWillUnmount() {
+    this.props.onUnload();
   }
 
   render() {
@@ -43,17 +54,19 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onTagSelect: (tag, payload) => dispatch({
-    type: 'APPLY_TAG_FILTER',
+  onTagSelect: (tag, pager, payload) => dispatch({
+    type: APPLY_TAG_FILTER,
     tag,
+    pager,
     payload
   }),
-  onLoad: (tab, payload) => dispatch({
-    type: 'HOME_PAGE_LOADED',
+  onLoad: (tab, pager, payload) => dispatch({
+    type: HOME_PAGE_LOADED,
     tab,
+    pager,
     payload
   }),
-  onUnload: () => dispatch({ type: 'HOME_PAGE_UNLOADED' })
+  onUnload: () => dispatch({ type: HOME_PAGE_UNLOADED })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

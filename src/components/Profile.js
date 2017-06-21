@@ -6,6 +6,13 @@ import agent from '../agent';
 
 import ArticleList from './ArticleList';
 
+import {
+  FOLLOW_USER,
+  UNFOLLOW_USER,
+  PROFILE_PAGE_LOADED,
+  PROFILE_PAGE_UNLOADED
+} from '../constants/actionTypes';
+
 function EditProfileSettings({ isUser }) {
   if (isUser) {
     return (
@@ -70,11 +77,6 @@ class Profile extends Component {
     this.props.onUnload();
   }
 
-  onSetPage(page) {
-    const promise = agent.articles.byAuthor(this.props.profile.username, page);
-    this.props.onSetPage(page, promise);
-  }
-
   renderTabs() {
     const { profile } = this.props;
 
@@ -102,6 +104,7 @@ class Profile extends Component {
       currentPage,
       profile,
       currentUser,
+      pager,
       onFollow,
       onUnfollow
     } = this.props;
@@ -142,10 +145,10 @@ class Profile extends Component {
                 {this.renderTabs()}
               </div>
               <ArticleList
+                pager={pager}
                 articles={articles}
                 articlesCount={articlesCount}
                 currentPage={currentPage}
-                onSetPage={this.onSetPage}
               />
             </div>
           </div>
@@ -164,16 +167,15 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onFollow: username => dispatch({
-    type: 'FOLLOW_USER',
+    type: FOLLOW_USER,
     payload: agent.Profile.follow(username)
   }),
-  onLoad: payload => dispatch({ type: 'PROFILE_PAGE_LOADED', payload }),
+  onLoad: payload => dispatch({ type: PROFILE_PAGE_LOADED, payload }),
   onUnfollow: username => dispatch({
-    type: 'UNFOLLOW_USER',
+    type: UNFOLLOW_USER,
     payload: agent.Profile.unfollow(username)
   }),
-  onUnload: () => dispatch({ type: 'PROFILE_PAGE_UNLOADED' }),
-  onSetPage: (page, payload) => dispatch({ type: 'SET_PAGE', page, payload })
+  onUnload: () => dispatch({ type: PROFILE_PAGE_UNLOADED })
 });
 
 export { Profile, mapStateToProps };

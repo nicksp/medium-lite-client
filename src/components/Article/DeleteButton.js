@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 
 import agent from '../../agent';
 
+import { DELETE_COMMENT } from '../../constants/actionTypes';
+
 function DeleteButton({ slug, commentId, onClick, show }) {
   const del = () => {
-    const payload = agent.Comments.del(slug, commentId);
+    const payload = agent.Comments.delete(slug, commentId);
     onClick(payload, commentId);
   };
 
@@ -21,7 +23,7 @@ function DeleteButton({ slug, commentId, onClick, show }) {
 }
 
 const mapDispatchToProps = dispatch => ({
-  onClick: (payload, commentId) => dispatch({ type: 'DELETE_COMMENT', payload, commentId })
+  onClick: (payload, commentId) => dispatch({ type: DELETE_COMMENT, payload, commentId })
 });
 
 export default connect(null, mapDispatchToProps)(DeleteButton);

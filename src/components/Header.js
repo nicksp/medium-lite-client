@@ -61,14 +61,16 @@ const LoggedInView = props => {
 
 export default class Header extends Component {
   render() {
+    const { currentUser, appName } = this.props;
+
     return (
       <nav className="navbar navbar-light">
         <div className="container">
           <Link to="/" className="navbar-brand">
-            {this.props.appName.toLowerCase()}
+            {appName.toLowerCase()}
           </Link>
-          <LoggedOutView currentUser={this.props.currentUser} />
-          <LoggedInView currentUser={this.props.currentUser} />
+          <LoggedOutView currentUser={currentUser} />
+          <LoggedInView currentUser={currentUser} />
         </div>
       </nav>
     );

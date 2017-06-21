@@ -14,11 +14,13 @@ function ArticleList(props) {
 
   return (
     <div>
-      {props.articles.map(article => <ArticlePreview key={article.slug} article={article} />)}
+      {
+        props.articles.map(article => <ArticlePreview key={article.slug} article={article} />)
+      }
       <ListPagination
+        pager={props.pager}
         articlesCount={props.articlesCount}
         currentPage={props.currentPage}
-        onSetPage={props.onSetPage}
       />
     </div>
   );

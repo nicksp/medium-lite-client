@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 
 import agent from '../../agent';
 
+import { ADD_COMMENT } from '../../constants/actionTypes';
+
 class CommentInput extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       body: ''
@@ -17,9 +19,9 @@ class CommentInput extends Component {
 
     this.createComment = event => {
       event.preventDefault();
-      const payload = agent.Comments.create(this.props.slug, { body: this.state.body });
+      const payload = agent.Comments.create(props.slug, { body: this.state.body });
       this.setState({ body: '' });
-      this.props.onSubmit(payload);
+      props.onSubmit(payload);
     };
   }
 
@@ -50,7 +52,7 @@ class CommentInput extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  onSubmit: payload => dispatch({ type: 'ADD_COMMENT', payload })
+  onSubmit: payload => dispatch({ type: ADD_COMMENT, payload })
 });
 
 export default connect(null, mapDispatchToProps)(CommentInput);

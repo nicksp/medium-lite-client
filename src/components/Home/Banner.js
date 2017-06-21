@@ -1,6 +1,10 @@
 import React from 'react';
 
-function Banner({ appName }) {
+function Banner({ appName, token }) {
+  if (token) {
+    return null;
+  }
+
   return (
     <div className="banner">
       <div className="container">

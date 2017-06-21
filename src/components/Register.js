@@ -5,6 +5,11 @@ import { connect } from 'react-redux';
 import ListErrors from './ListErrors';
 
 import agent from '../agent';
+import {
+  UPDATE_FIELD_AUTH,
+  REGISTER,
+  REGISTER_PAGE_UNLOADED
+} from '../constants/actionTypes';
 
 class Register extends Component {
   handleFieldChange = (name) => event => this.props.onChangeField(name, event.target.value)
@@ -12,6 +17,10 @@ class Register extends Component {
   submitForm = (username, email, password) => event => {
     event.preventDefault();
     this.props.onSubmit(username, email, password);
+  }
+
+  componentWillUnmount() {
+    this.props.onUnload();
   }
 
   render() {
@@ -80,11 +89,12 @@ class Register extends Component {
 const mapStateToProps = state => ({ ...state.auth });
 
 const mapDispatchToProps = dispatch => ({
-  onChangeField: (key, value) => dispatch({ type: 'UPDATE_FIELD_AUTH', key, value }),
+  onChangeField: (key, value) => dispatch({ type: UPDATE_FIELD_AUTH, key, value }),
   onSubmit: (username, email, password) => {
     const payload = agent.Auth.register(username, email, password);
-    dispatch({ type: 'LOGIN', payload });
-  }
+    dispatch({ type: REGISTER, payload });
+  },
+  onUnload: () => dispatch({ type: REGISTER_PAGE_UNLOADED })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register)

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 export default class SettingsForm extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       image: '',
@@ -17,7 +17,7 @@ export default class SettingsForm extends Component {
     const oldState = this.state;
     const newState = Object.assign({}, oldState, { [field]: event.target.value });
     this.setState(newState);
-  };
+  }
 
   submitForm = event => {
     event.preventDefault();
@@ -28,7 +28,7 @@ export default class SettingsForm extends Component {
     }
 
     this.props.onSubmitForm(user);
-  };
+  }
 
   componentWillMount() {
     if (this.props.currentUser) {
@@ -105,7 +105,7 @@ export default class SettingsForm extends Component {
           <button
             className="btn btn-lg btn-primary pull-xs-right"
             type="submit"
-            disabled={this.state.inProgress}
+            disabled={this.state.isInProgress}
           >
             Update Settings
           </button>

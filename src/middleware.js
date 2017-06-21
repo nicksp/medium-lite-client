@@ -18,13 +18,11 @@ const promiseMiddleware = store => next => action => {
 
     action.payload.then(
       response => {
-        console.log('RESULT', response);
         action.payload = response;
         store.dispatch({ type: ASYNC_END, promise: action.payload });
         store.dispatch(action);
       },
       error => {
-        console.log('ERROR', error);
         action.error = true;
         action.payload = error.response.body;
         store.dispatch(action);

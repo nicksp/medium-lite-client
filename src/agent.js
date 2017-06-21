@@ -1,6 +1,6 @@
 import superagent from 'superagent';
 
-const API_ROOT = 'https://shielded-atoll-25994.herokuapp.com/api';
+const API_ROOT = 'https://medium-lite.herokuapp.com/api';
 
 const encode = encodeURIComponent;
 const getResponseBody = response => response.body;
@@ -28,7 +28,7 @@ const Articles = {
   byTag: (tag, page) => requests.get(`/articles?tag=${encode(tag)}&${limit(10, page)}`),
   favorite: slug => requests.post(`/articles/${slug}/favorite`),
   unfavorite: slug => requests.del(`/articles/${slug}/favorite`),
-  del: slug => requests.del(`/articles/${slug}`),
+  delete: slug => requests.del(`/articles/${slug}`),
   favoritedBy: (author, page) => requests.get(`/articles?favorited=${encode(author)}&${limit(5, page)}`),
   feed: page => requests.get(`/articles/feed?l${limit(10, page)}`),
   get: slug => requests.get(`/articles/${slug}`),

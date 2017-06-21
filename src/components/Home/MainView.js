@@ -5,6 +5,8 @@ import ArticleList from '../ArticleList';
 
 import agent from '../../agent';
 
+import { CHANGE_TAB } from '../../constants/actionTypes';
+
 function TagFilterTab(props) {
   if (!props.tag) {
     return null;
@@ -23,7 +25,7 @@ function YourFeedTab(props) {
   if (props.token) {
     const clickHandler = event => {
       event.preventDefault();
-      props.onTabClick('feed', agent.Articles.feed());
+      props.onTabClick('feed', agent.Articles.feed, agent.Articles.feed());
     };
 
     return (
@@ -43,7 +45,7 @@ function YourFeedTab(props) {
 function GlobalFeedTab(props) {
   const clickHandler = event => {
     event.preventDefault();
-    props.onTabClick('all', agent.Articles.all());
+    props.onTabClick('all', agent.Articles.all, agent.Articles.all());
   };
 
   return (
@@ -58,9 +60,7 @@ function GlobalFeedTab(props) {
   );
 }
 
-function MainView({ articles, articlesCount, currentPage, onSetPage, tab, tag, token, onTabClick }) {
-const handleSetPage = page => onSetPage(tab, page);
-
+function MainView({ articles, articlesCount, currentPage, pager, tab, tag, token, onTabClick }) {
   return (
     <div className="col-md-9">
       <div className="feed-toggle">
@@ -76,10 +76,10 @@ const handleSetPage = page => onSetPage(tab, page);
       </div>
 
       <ArticleList
+        pager={pager}
         articles={articles}
         articlesCount={articlesCount}
         currentPage={currentPage}
-        onSetPage={handleSetPage}
       />
     </div>
   );
@@ -87,16 +87,12 @@ const handleSetPage = page => onSetPage(tab, page);
 
 const mapStateToProps = state => ({
   ...state.articleList,
+  tags: state.home.tags,
   token: state.common.token
 });
 
 const mapDispatchToProps = dispatch => ({
-  onTabClick: (tab, payload) => dispatch({ type: 'CHANGE_TAB', tab, payload }),
-  onSetPage: (tab, page) => dispatch({
-    type: 'SET_PAGE',
-    page,
-    payload: tab === 'feed' ? agent.Articles.feed(page) : agent.Articles.all(page)
-  })
+  onTabClick: (tab, pager, payload) => dispatch({ type: CHANGE_TAB, tab, pager, payload })
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainView);

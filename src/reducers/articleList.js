@@ -45,7 +45,7 @@ export default (state = {}, action) => {
       return {
         ...state,
         articles: action.payload.articles,
-        articlesCount: action.payload.articleCount,
+        articlesCount: action.payload.articlesCount,
         currentPage: action.page
       };
     case CHANGE_TAB:
@@ -53,7 +53,7 @@ export default (state = {}, action) => {
         ...state,
         pager: action.pager,
         articles: action.payload.articles,
-        articlesCount: action.payload.articleCount,
+        articlesCount: action.payload.articlesCount,
         tab: action.tab,
         currentPage: 0,
         tag: null
@@ -74,7 +74,7 @@ export default (state = {}, action) => {
         ...state,
         pager: action.pager,
         articles: action.payload[1].articles,
-        articlesCount: action.payload[1].articleCount,
+        articlesCount: action.payload[1].articlesCount,
         currentPage: 0
       };
     case PROFILE_PAGE_UNLOADED:

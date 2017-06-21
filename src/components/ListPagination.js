@@ -1,7 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import agent from '../agent';
+
+import { SET_PAGE } from '../constants/actionTypes';
 
 function ListPagination(props) {
-  if (props.articlesCount < 10) {
+  if (props.articlesCount <= 10) {
     return null;
   }
 
@@ -11,7 +16,13 @@ function ListPagination(props) {
     range.push(i);
   }
 
-  const setPage = page => props.onSetPage(page);
+  const setPage = page => {
+    if (props.pager) {
+      props.onSetPage(page, props.pager(page));
+    } else {
+      props.onSetPage(page, agent.Articles.all(page));
+    }
+  };
 
   return (
     <nav>
@@ -40,4 +51,8 @@ function ListPagination(props) {
   );
 }
 
-export default ListPagination;
+const mapDispatchToProps = dispatch => ({
+  onSetPage: (page, payload) => dispatch({ type: SET_PAGE, page, payload })
+});
+
+export default connect(null, mapDispatchToProps)(ListPagination);
