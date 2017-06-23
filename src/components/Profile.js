@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import Promise from 'bluebird';
 
 import agent from '../agent';
 
@@ -25,7 +26,7 @@ function EditProfileSettings({ isUser }) {
     );
   }
   return null;
-};
+}
 
 function FollowUserButton({ isUser, user, unfollow, follow }) {
   if (isUser) {
@@ -59,7 +60,7 @@ function FollowUserButton({ isUser, user, unfollow, follow }) {
       {user.following ? 'Unfollow' : 'Follow'} {user.username}
     </button>
   );
-};
+}
 
 class Profile extends Component {
   constructor(props) {

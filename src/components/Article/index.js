@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import marked from 'marked';
 import { connect } from 'react-redux';
+import Promise from 'bluebird';
 
 import agent from '../../agent';
 
