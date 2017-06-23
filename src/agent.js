@@ -30,7 +30,7 @@ const Articles = {
   unfavorite: slug => requests.del(`/articles/${slug}/favorite`),
   delete: slug => requests.del(`/articles/${slug}`),
   favoritedBy: (author, page) => requests.get(`/articles?favorited=${encode(author)}&${limit(5, page)}`),
-  feed: page => requests.get(`/articles/feed?l${limit(10, page)}`),
+  feed: page => requests.get(`/articles/feed?${limit(10, page)}`),
   get: slug => requests.get(`/articles/${slug}`),
   create: article => requests.post('/articles', { article }),
   update: article => requests.put(`/articles/${article.slug}`, { article: omitSlug(article) })
