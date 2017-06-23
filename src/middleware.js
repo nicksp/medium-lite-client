@@ -25,6 +25,7 @@ const promiseMiddleware = store => next => action => {
       error => {
         action.error = true;
         action.payload = error.response.body;
+        store.dispatch({ type: ASYNC_END, promise: action.payload });
         store.dispatch(action);
       }
     );
