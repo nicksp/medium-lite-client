@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "bluebird": "^3.5.0",
-    "eslint": "^4.0.0",
+    "eslint": "^4.1.0",
     "history": "^4.6.3",
     "marked": "^0.3.6",
     "prop-types": "^15.5.10",
