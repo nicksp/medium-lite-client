@@ -6,13 +6,14 @@ module.exports = {
     "browser": true
   },
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 7,
     "sourceType": "module",
     "ecmaFeatures": {
-      "jsx": true
+      "jsx": true,
+      "experimentalObjectRestSpread": true
     }
   },
   "rules": {
-    "no-unused-vars": 0
+    "no-unused-vars": "off"
   }
 }
