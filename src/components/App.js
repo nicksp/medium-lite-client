@@ -9,10 +9,6 @@ import agent from '../agent';
 import { APP_LOAD, REDIRECT } from '../constants/actionTypes';
 
 class App extends Component {
-  static contextTypes = {
-    router: PropTypes.object.isRequired
-  }
-
   constructor(props) {
     super(props);
 
@@ -55,6 +51,10 @@ class App extends Component {
     );
   }
 }
+
+App.contextTypes = {
+  router: PropTypes.object.isRequired
+};
 
 const mapStateToProps = state => ({
   appLoaded: state.common.appLoaded,

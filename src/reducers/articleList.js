@@ -30,6 +30,10 @@ export default (state = {}, action) => {
         })
       };
     case HOME_PAGE_LOADED:
+      if (action.error) {
+        return {};
+      }
+
       return {
         ...state,
         pager: action.pager,

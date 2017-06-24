@@ -18,7 +18,7 @@ const promiseMiddleware = store => next => action => {
 
     action.payload.then(
       response => {
-        action.payload = response;
+        action.payload = response || {};
         store.dispatch({ type: ASYNC_END, promise: action.payload });
         store.dispatch(action);
       },

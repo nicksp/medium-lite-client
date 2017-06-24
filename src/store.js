@@ -6,7 +6,12 @@ import appReducer from './reducers';
 
 const getMiddleware = () => {
   // eslint-disable-next-line no-undef
-  if (process.env.NODE_ENV === 'production') {
+  const NODE_ENV = process.env.NODE_ENV;
+
+  const isProd = NODE_ENV === 'production';
+  const isTest = NODE_ENV === 'test';
+
+  if (isProd || isTest) {
     return applyMiddleware(promiseMiddleware, localStorageMiddleware);
   } else {
     // Enable additional logging in non-production environments

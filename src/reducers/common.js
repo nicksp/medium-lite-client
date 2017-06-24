@@ -57,7 +57,7 @@ export default (state = initialState, action) => {
         redirectTo: '/'
       };
     case ARTICLE_SUBMITTED: {
-      const redirectUrl = `article/${action.payload.article.slug}`;
+      const redirectUrl = `/article/${action.payload.article.slug}`;
       return {
         ...state,
         redirectTo: redirectUrl
