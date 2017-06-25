@@ -1,3 +1,4 @@
+import agent from './agent';
 import {
   ASYNC_START,
   ASYNC_END,
@@ -6,26 +7,33 @@ import {
   REGISTER
 } from './constants/actionTypes';
 
-import agent from './agent';
-
-function _isPromise(input) {
-  return !!input && typeof input.then === 'function';
-}
-
 const promiseMiddleware = store => next => action => {
-  if (_isPromise(action.payload)) {
+  if (isPromise(action.payload)) {
     store.dispatch({ type: ASYNC_START, subtype: action.type });
 
+    const currentView = store.getState().viewChangeCounter;
+    const skipTracking = action.skipTracking;
+
     action.payload.then(
-      response => {
-        action.payload = response || {};
+      res => {
+        const currentState = store.getState()
+        if (!skipTracking && currentState.viewChangeCounter !== currentView) {
+          return
+        }
+        action.payload = res;
         store.dispatch({ type: ASYNC_END, promise: action.payload });
         store.dispatch(action);
       },
       error => {
+        const currentState = store.getState()
+        if (!skipTracking && currentState.viewChangeCounter !== currentView) {
+          return
+        }
         action.error = true;
         action.payload = error.response.body;
-        store.dispatch({ type: ASYNC_END, promise: action.payload });
+        if (!action.skipTracking) {
+          store.dispatch({ type: ASYNC_END, promise: action.payload });
+        }
         store.dispatch(action);
       }
     );
@@ -39,9 +47,8 @@ const promiseMiddleware = store => next => action => {
 const localStorageMiddleware = store => next => action => {
   if (action.type === REGISTER || action.type === LOGIN) {
     if (!action.error) {
-      const userToken = action.payload.user.token;
-      window.localStorage.setItem('jwt', userToken);
-      agent.setToken(userToken)
+      window.localStorage.setItem('jwt', action.payload.user.token);
+      agent.setToken(action.payload.user.token);
     }
   } else if (action.type === LOGOUT) {
     window.localStorage.setItem('jwt', '');
@@ -51,7 +58,9 @@ const localStorageMiddleware = store => next => action => {
   next(action);
 };
 
-export {
-  promiseMiddleware,
-  localStorageMiddleware
-};
+function isPromise(v) {
+  return v && typeof v.then === 'function';
+}
+
+
+export { promiseMiddleware, localStorageMiddleware }

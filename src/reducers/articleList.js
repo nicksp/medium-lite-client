@@ -29,38 +29,12 @@ export default (state = {}, action) => {
           return article;
         })
       };
-    case HOME_PAGE_LOADED:
-      if (action.error) {
-        return {};
-      }
-
-      return {
-        ...state,
-        pager: action.pager,
-        tags: action.payload[0].tags,
-        articles: action.payload[1].articles,
-        articlesCount: action.payload[1].articlesCount,
-        tab: action.tab,
-        currentPage: 0
-      };
-    case HOME_PAGE_UNLOADED:
-      return {};
     case SET_PAGE:
       return {
         ...state,
         articles: action.payload.articles,
         articlesCount: action.payload.articlesCount,
         currentPage: action.page
-      };
-    case CHANGE_TAB:
-      return {
-        ...state,
-        pager: action.pager,
-        articles: action.payload.articles,
-        articlesCount: action.payload.articlesCount,
-        tab: action.tab,
-        currentPage: 0,
-        tag: null
       };
     case APPLY_TAG_FILTER:
       return {
@@ -71,6 +45,28 @@ export default (state = {}, action) => {
         tab: null,
         tag: action.tag,
         currentPage: 0
+      };
+    case HOME_PAGE_LOADED:
+      return {
+        ...state,
+        pager: action.pager,
+        tags: action.payload[0].tags,
+        articles: action.payload[1].articles,
+        articlesCount: action.payload[1].articlesCount,
+        currentPage: 0,
+        tab: action.tab
+      };
+    case HOME_PAGE_UNLOADED:
+      return {};
+    case CHANGE_TAB:
+      return {
+        ...state,
+        pager: action.pager,
+        articles: action.payload.articles,
+        articlesCount: action.payload.articlesCount,
+        tab: action.tab,
+        currentPage: 0,
+        tag: null
       };
     case PROFILE_PAGE_LOADED:
     case PROFILE_FAVORITES_PAGE_LOADED:

@@ -5,19 +5,10 @@ import {
   ASYNC_START,
   ADD_TAG,
   REMOVE_TAG,
-  EDITOR_UPDATE_FIELD
+  UPDATE_FIELD_EDITOR
 } from '../constants/actionTypes';
 
-const initialState = {
-  articleSlug: '',
-  title: '',
-  description: '',
-  body: '',
-  tagList: [],
-  isInProgress: false,
-};
-
-export default (state = initialState, action) => {
+export default (state = {}, action) => {
   switch (action.type) {
     case EDITOR_PAGE_LOADED:
       return {
@@ -26,42 +17,38 @@ export default (state = initialState, action) => {
         title: action.payload ? action.payload.article.title : '',
         description: action.payload ? action.payload.article.description : '',
         body: action.payload ? action.payload.article.body : '',
-        tagList: action.payload ? action.payload.article.tagList : [],
-        tagInput: ''
+        tagInput: '',
+        tagList: action.payload ? action.payload.article.tagList : []
       };
     case EDITOR_PAGE_UNLOADED:
-      return initialState;
+      return {};
     case ARTICLE_SUBMITTED:
       return {
         ...state,
         isInProgress: null,
         errors: action.error ? action.payload.errors : null
       };
-      case ASYNC_START:
-        if (action.subtype === ARTICLE_SUBMITTED) {
-          return {
-            ...state,
-            isInProgress: true
-          };
-        }
-        return state;
-      case ADD_TAG:
-        return {
-          ...state,
-          tagList: state.tagList.concat([state.tagInput]),
-          tagInput: ''
-        };
-      case REMOVE_TAG:
-        return {
-          ...state,
-          tagList: state.tagList.filter(tag => tag !== action.tag)
-        };
-      case EDITOR_UPDATE_FIELD:
-        return {
-          ...state,
-          [action.key]: action.value
-        };
+    case ASYNC_START:
+      if (action.subtype === ARTICLE_SUBMITTED) {
+        return { ...state, isInProgress: true };
+      }
+      break;
+    case ADD_TAG:
+      return {
+        ...state,
+        tagList: state.tagList.concat([state.tagInput]),
+        tagInput: ''
+      };
+    case REMOVE_TAG:
+      return {
+        ...state,
+        tagList: state.tagList.filter(tag => tag !== action.tag)
+      };
+    case UPDATE_FIELD_EDITOR:
+      return { ...state, [action.key]: action.value };
     default:
       return state;
   }
+
+  return state;
 };

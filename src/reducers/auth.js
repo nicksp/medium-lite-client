@@ -7,12 +7,7 @@ import {
   UPDATE_FIELD_AUTH
 } from '../constants/actionTypes';
 
-const initialState = {
-  isInProgress: false,
-  errors: null
-};
-
-export default (state = initialState, action) => {
+export default (state = {}, action) => {
   switch (action.type) {
     case LOGIN:
     case REGISTER:
@@ -23,21 +18,17 @@ export default (state = initialState, action) => {
       };
     case LOGIN_PAGE_UNLOADED:
     case REGISTER_PAGE_UNLOADED:
-      return { ...initialState };
+      return {};
     case ASYNC_START:
       if (action.subtype === LOGIN || action.subtype === REGISTER) {
-        return {
-          ...state,
-          isInProgress: true
-        };
+        return { ...state, isInProgress: true };
       }
-      return state;
+      break;
     case UPDATE_FIELD_AUTH:
-      return {
-        ...state,
-        [action.key]: action.value
-      };
+      return { ...state, [action.key]: action.value };
     default:
       return state;
   }
+
+  return state;
 };

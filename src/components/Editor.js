@@ -1,72 +1,75 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-
 import ListErrors from './ListErrors';
-
+import React from 'react';
 import agent from '../agent';
-
+import { connect } from 'react-redux';
 import {
   ADD_TAG,
   EDITOR_PAGE_LOADED,
   REMOVE_TAG,
   ARTICLE_SUBMITTED,
   EDITOR_PAGE_UNLOADED,
-  EDITOR_UPDATE_FIELD
+  UPDATE_FIELD_EDITOR
 } from '../constants/actionTypes';
 
-class Editor extends Component {
-  constructor(props) {
-    super(props);
+const mapStateToProps = state => ({
+  ...state.editor
+});
 
-    const handleFieldUpdate = key => event => props.onUpdateField(key, event.target.value);
-    this.changeTitle = handleFieldUpdate('title');
-    this.changeDescription = handleFieldUpdate('description');
-    this.changeBody = handleFieldUpdate('body');
-    this.changeTagInput = handleFieldUpdate('tagInput');
+const mapDispatchToProps = dispatch => ({
+  onAddTag: () =>
+    dispatch({ type: ADD_TAG }),
+  onLoad: payload =>
+    dispatch({ type: EDITOR_PAGE_LOADED, payload }),
+  onRemoveTag: tag =>
+    dispatch({ type: REMOVE_TAG, tag }),
+  onSubmit: payload =>
+    dispatch({ type: ARTICLE_SUBMITTED, payload }),
+  onUnload: payload =>
+    dispatch({ type: EDITOR_PAGE_UNLOADED }),
+  onUpdateField: (key, value) =>
+    dispatch({ type: UPDATE_FIELD_EDITOR, key, value })
+});
 
-    // When entering tags, hitting enter adds a tag to the list
-    this.watchForEnter = event => {
-      if (event.keyCode === 13) {
-        event.preventDefault();
-        props.onAddTag();
+class Editor extends React.Component {
+  constructor() {
+    super();
+
+    const updateFieldEvent =
+      key => ev => this.props.onUpdateField(key, ev.target.value);
+    this.changeTitle = updateFieldEvent('title');
+    this.changeDescription = updateFieldEvent('description');
+    this.changeBody = updateFieldEvent('body');
+    this.changeTagInput = updateFieldEvent('tagInput');
+
+    this.watchForEnter = ev => {
+      if (ev.keyCode === 13) {
+        ev.preventDefault();
+        this.props.onAddTag();
       }
     };
 
-    this.handleTagRemove = tag => () => props.onRemoveTag(tag);
-
-    // If we have a slug, we're updating an article,
-    // otherwise we're creating a new one.
-    this.submitForm = event => {
-      event.preventDefault();
-      const article = {
-        title: props.title,
-        description: props.description,
-        body: props.body,
-        tagList: props.tagList
-      };
-
-      const slug = { slug: props.articleSlug };
-      const promise = props.articleSlug
-        ? agent.Articles.update(Object.assign(article, slug))
-        : agent.Articles.create(article);
-
-      props.onSubmit(promise);
+    this.removeTagHandler = tag => () => {
+      this.props.onRemoveTag(tag);
     };
 
-    if (props.params.slug) {
-      return props.onLoad(agent.Articles.get(props.params.slug));
-    }
-    props.onLoad(null);
+    this.submitForm = ev => {
+      ev.preventDefault();
+      const article = {
+        title: this.props.title,
+        description: this.props.description,
+        body: this.props.body,
+        tagList: this.props.tagList
+      };
+
+      const slug = { slug: this.props.articleSlug };
+      const promise = this.props.articleSlug ?
+        agent.Articles.update(Object.assign(article, slug)) :
+        agent.Articles.create(article);
+
+      this.props.onSubmit(promise);
+    };
   }
 
-  /**
-   * React-router has an interesting quirk: if two routes have the
-   * same component, react-router will reuse the component when
-   * switching between the two. So if '/editor' and '/editor/:slug'
-   * both use the 'Editor' component, react-router won't recreate
-   * the Editor component if you navigate to '/editor' from '/editor/:slug'.
-   * To work around this, we need the `componentWillReceiveProps()` hook.
-   */
   componentWillReceiveProps(nextProps) {
     if (this.props.params.slug !== nextProps.params.slug) {
       if (nextProps.params.slug) {
@@ -75,6 +78,13 @@ class Editor extends Component {
       }
       this.props.onLoad(null);
     }
+  }
+
+  componentWillMount() {
+    if (this.props.params.slug) {
+      return this.props.onLoad(agent.Articles.get(this.props.params.slug));
+    }
+    this.props.onLoad(null);
   }
 
   componentWillUnmount() {
@@ -87,71 +97,76 @@ class Editor extends Component {
         <div className="container page">
           <div className="row">
             <div className="col-md-10 offset-md-1 col-xs-12">
-              <ListErrors errors={this.props.errors} />
+
+              <ListErrors errors={this.props.errors}></ListErrors>
 
               <form>
                 <fieldset>
+
                   <fieldset className="form-group">
                     <input
                       className="form-control form-control-lg"
                       type="text"
-                      placeholder="Article title"
+                      placeholder="Article Title"
                       value={this.props.title}
-                      onChange={this.changeTitle}
-                    />
+                      onChange={this.changeTitle} />
                   </fieldset>
 
                   <fieldset className="form-group">
                     <input
-                      className="form-control form-control-lg"
+                      className="form-control"
                       type="text"
                       placeholder="What's this article about?"
                       value={this.props.description}
-                      onChange={this.changeDescription}
-                    />
+                      onChange={this.changeDescription} />
                   </fieldset>
 
                   <fieldset className="form-group">
                     <textarea
                       className="form-control"
                       rows="8"
-                      placeholder="Write your article (markdown supported)"
+                      placeholder="Write your article (in markdown)"
                       value={this.props.body}
-                      onChange={this.changeBody}
-                    />
+                      onChange={this.changeBody}>
+                    </textarea>
                   </fieldset>
 
                   <fieldset className="form-group">
                     <input
-                      className="form-control form-control-lg"
+                      className="form-control"
                       type="text"
                       placeholder="Enter tags"
                       value={this.props.tagInput}
                       onChange={this.changeTagInput}
-                      onKeyUp={this.watchForEnter}
-                    />
-                  </fieldset>
+                      onKeyUp={this.watchForEnter} />
 
-                  <div className="tag-list">
-                    {
-                      (this.props.tagList || []).map(tag => (
-                        <span className="tag-default tag-pill" key={tag}>
-                          <i className="ion-close-round" onClick={this.handleTagRemove(tag)}> {tag}</i>
-                        </span>
-                      ))
-                    }
-                  </div>
+                    <div className="tag-list">
+                      {
+                        (this.props.tagList || []).map(tag => {
+                          return (
+                            <span className="tag-default tag-pill" key={tag}>
+                              <i  className="ion-close-round"
+                                  onClick={this.removeTagHandler(tag)}>
+                              </i>
+                              {tag}
+                            </span>
+                          );
+                        })
+                      }
+                    </div>
+                  </fieldset>
 
                   <button
                     className="btn btn-lg pull-xs-right btn-primary"
                     type="button"
                     disabled={this.props.isInProgress}
-                    onClick={this.submitForm}
-                  >
+                    onClick={this.submitForm}>
                     Publish Article
                   </button>
+
                 </fieldset>
               </form>
+
             </div>
           </div>
         </div>
@@ -159,18 +174,5 @@ class Editor extends Component {
     );
   }
 }
-
-const mapStateToProps = state => ({
-  ...state.editor
-});
-
-const mapDispatchToProps = dispatch => ({
-  onAddTag: () => dispatch({ type: ADD_TAG }),
-  onRemoveTag: tag => dispatch({ type: REMOVE_TAG, tag }),
-  onLoad: payload => dispatch({ type: EDITOR_PAGE_LOADED, payload }),
-  onUnload: () => dispatch({ type: EDITOR_PAGE_UNLOADED }),
-  onSubmit: payload => dispatch({ type: ARTICLE_SUBMITTED, payload }),
-  onUpdateField: (key, value) => dispatch({ type: EDITOR_UPDATE_FIELD, key, value })
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Editor);

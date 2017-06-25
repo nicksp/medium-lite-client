@@ -5,7 +5,6 @@ import { promiseMiddleware, localStorageMiddleware } from './middleware';
 import appReducer from './reducers';
 
 const getMiddleware = () => {
-  // eslint-disable-next-line no-undef
   const NODE_ENV = process.env.NODE_ENV;
 
   const isProd = NODE_ENV === 'production';

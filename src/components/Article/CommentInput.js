@@ -1,27 +1,30 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-
+import React from 'react';
 import agent from '../../agent';
-
+import { connect } from 'react-redux';
 import { ADD_COMMENT } from '../../constants/actionTypes';
 
-class CommentInput extends Component {
-  constructor(props) {
-    super(props);
+const mapDispatchToProps = dispatch => ({
+  onSubmit: payload =>
+    dispatch({ type: ADD_COMMENT, payload })
+});
 
+class CommentInput extends React.Component {
+  constructor() {
+    super();
     this.state = {
       body: ''
     };
 
-    this.handleBodyChange = event => {
-      this.setState({ body: event.target.value });
+    this.setBody = ev => {
+      this.setState({ body: ev.target.value });
     };
 
-    this.createComment = event => {
-      event.preventDefault();
-      const payload = agent.Comments.create(props.slug, { body: this.state.body });
+    this.createComment = ev => {
+      ev.preventDefault();
+      const payload = agent.Comments.create(this.props.slug,
+        { body: this.state.body });
       this.setState({ body: '' });
-      props.onSubmit(payload);
+      this.props.onSubmit(payload);
     };
   }
 
@@ -32,17 +35,18 @@ class CommentInput extends Component {
           <textarea className="form-control"
             placeholder="Write a comment..."
             value={this.state.body}
-            onChange={this.handleBodyChange}
+            onChange={this.setBody}
             rows="3">
           </textarea>
         </div>
         <div className="card-footer">
           <img
             src={this.props.currentUser.image}
-            alt={this.props.currentUser.username}
             className="comment-author-img"
-          />
-          <button className="btn btn-sm btn-primary" type="submit">
+            alt={this.props.currentUser.username} />
+          <button
+            className="btn btn-sm btn-primary"
+            type="submit">
             Post Comment
           </button>
         </div>
@@ -51,8 +55,4 @@ class CommentInput extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  onSubmit: payload => dispatch({ type: ADD_COMMENT, payload })
-});
-
-export default connect(null, mapDispatchToProps)(CommentInput);
+export default connect(() => ({}), mapDispatchToProps)(CommentInput);

@@ -1,60 +1,9 @@
-import React, { Component } from 'react';
+import agent from '../agent';
+import Header from './Header';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
-import Header from './Header';
-
-import agent from '../agent';
-
 import { APP_LOAD, REDIRECT } from '../constants/actionTypes';
-
-class App extends Component {
-  constructor(props) {
-    super(props);
-
-    const token = window.localStorage.getItem('jwt');
-
-    if (token) {
-      agent.setToken(token);
-    }
-
-    props.onLoad(token ? agent.Auth.current() : null, token);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.redirectTo) {
-      this.context.router.replace(nextProps.redirectTo);
-      this.props.onRedirect();
-    }
-  }
-
-  render() {
-    if (this.props.appLoaded) {
-      return (
-        <div>
-          <Header
-            appName={this.props.appName}
-            currentUser={this.props.currentUser}
-          />
-          {this.props.children}
-        </div>
-      );
-    }
-
-    return (
-      <div>
-        <Header
-          appName={this.props.appName}
-          currentUser={this.props.currentUser}
-        />
-      </div>
-    );
-  }
-}
-
-App.contextTypes = {
-  router: PropTypes.object.isRequired
-};
 
 const mapStateToProps = state => ({
   appLoaded: state.common.appLoaded,
@@ -64,8 +13,52 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onRedirect: () => dispatch({ type: REDIRECT }),
-  onLoad: (payload, token) => dispatch({ type: APP_LOAD, payload, token })
+  onLoad: (payload, token) =>
+    dispatch({ type: APP_LOAD, payload, token, skipTracking: true }),
+  onRedirect: () =>
+    dispatch({ type: REDIRECT })
 });
+
+class App extends React.Component {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.redirectTo) {
+      this.context.router.replace(nextProps.redirectTo);
+      this.props.onRedirect();
+    }
+  }
+
+  componentWillMount() {
+    const token = window.localStorage.getItem('jwt');
+    if (token) {
+      agent.setToken(token);
+    }
+
+    this.props.onLoad(token ? agent.Auth.current() : null, token);
+  }
+
+  render() {
+    if (this.props.appLoaded) {
+      return (
+        <div>
+          <Header
+            appName={this.props.appName}
+            currentUser={this.props.currentUser} />
+          {this.props.children}
+        </div>
+      );
+    }
+    return (
+      <div>
+        <Header
+          appName={this.props.appName}
+          currentUser={this.props.currentUser} />
+      </div>
+    );
+  }
+}
+
+App.contextTypes = {
+  router: PropTypes.object.isRequired
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
